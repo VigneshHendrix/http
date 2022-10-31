@@ -20,12 +20,11 @@ class ByteStream extends StreamView<List<int>> {
     var completer = Completer<Uint8List>();
     var sink = ByteConversionSink.withCallback(
         (bytes) => completer.complete(Uint8List.fromList(bytes)));
-    StreamSubscription<List<int>> subscription = listen(sink.add,
-        onError: completer.completeError,
-        onDone: sink.close,
-        cancelOnError: true);
-    await subscription.cancel();
-    print('cancelled');
+    await listen(sink.add,
+            onError: completer.completeError,
+            onDone: sink.close,
+            cancelOnError: true)
+        .cancel();
     return completer.future;
   }
 
