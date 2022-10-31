@@ -16,14 +16,15 @@ class ByteStream extends StreamView<List<int>> {
       ByteStream(Stream.value(bytes));
 
   /// Collects the data of this stream in a [Uint8List].
-  Future<Uint8List> toBytes() {
+  Future<Uint8List> toBytes() async {
     var completer = Completer<Uint8List>();
     var sink = ByteConversionSink.withCallback(
         (bytes) => completer.complete(Uint8List.fromList(bytes)));
-    listen(sink.add,
+    StreamSubscription<List<int>> subscription = listen(sink.add,
         onError: completer.completeError,
         onDone: sink.close,
         cancelOnError: true);
+    await subscription.cancel();
     return completer.future;
   }
 
