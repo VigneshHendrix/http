@@ -25,6 +25,7 @@ class ByteStream extends StreamView<List<int>> {
         onDone: sink.close,
         cancelOnError: true);
     await subscription.cancel();
+    print('cancelled');
     return completer.future;
   }
 
